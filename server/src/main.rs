@@ -256,8 +256,6 @@ async fn handle_volume_request(
                 volume,
             };
 
-            // Optionally, you can update the cache here by sending the volume to the cache server
-
             Ok(Json(volume_response))
         }
         Err(e) => {
