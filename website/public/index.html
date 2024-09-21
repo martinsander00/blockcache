@@ -5,27 +5,30 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BlockCache Landing Page</title>
-    <link rel="stylesheet" href="../src/styles.css" />
+    <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <h1 id="greeting">Welcome to BlockCache</h1>
+    <!-- Header Section -->
+    <header class="header">
+      <nav class="navbar">
+        <div class="navbar-left">
+          <span class="logo">BlockCache</span>
+          <ul class="nav-links">
+            <li><a href="#">Explore</a></li>
+            <li><a href="#">Learn</a></li>
+            <li><a href="#">Company</a></li>
+          </ul>
+        </div>
+      </nav>
+    </header>
 
-    <!-- Input Section -->
-    <div class="input-section">
-      <input
-        type="text"
-        id="poolAddressInput"
-        placeholder="Enter Pool Address"
-      />
-      <button id="actionBtn">Get Volume</button>
-    </div>
+    <!-- Divider line -->
+    <hr class="divider" />
 
-    <!-- Response Section -->
-    <div id="responseSection">
-      <!-- Volume response will be displayed here -->
-    </div>
+    <!-- Pools Section -->
+    <div id="pools-container" class="pools-container"></div>
 
-    <script src="../src/index.ts"></script>
+    <script src="./index.js"></script>
   </body>
 </html>
 

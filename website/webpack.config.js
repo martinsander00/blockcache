@@ -1,27 +1,24 @@
-// webpack.config.js
-
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   // Entry point of your application
-  entry: './src/index.ts',
+  entry: './src/index.ts', // Ensure this path is correct
 
   // Output configuration
   output: {
-    filename: '[name].bundle.js', // Use dynamic names for entry chunks
+    filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '/', // Necessary for dev server routing
-    chunkFilename: '[name].bundle.js', // Use dynamic names for additional chunks
+    publicPath: '/', 
+    chunkFilename: '[name].bundle.js',
   },
 
   // Resolve extensions so you can import without specifying them
   resolve: {
-    extensions: ['.ts', '.js'],
+    extensions: ['.ts', '.js'], // Make sure Webpack looks for TypeScript and JavaScript files
   },
 
-  // Module rules to handle different file types
   module: {
     rules: [
       // TypeScript loader
@@ -41,37 +38,38 @@ module.exports = {
         test: /\.js$/,
         loader: 'source-map-loader',
       },
+      // Images and assets loader
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        type: 'asset/resource',
+      },
     ],
   },
 
-  // Plugins
   plugins: [
-    new CleanWebpackPlugin(), // Cleans the dist folder before each build
+    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: './public/index.html', // Template file
-      filename: 'index.html', // Output file
+      template: './public/index.html',
+      filename: 'index.html',
     }),
   ],
 
-  // Development server configuration
   devServer: {
     static: {
-      directory: path.join(__dirname, 'dist'), // Serve from 'dist' directory
+      directory: path.join(__dirname, 'dist'),
     },
-    compress: true, // Enable gzip compression
-    port: 9000, // Port number
-    open: true, // Open browser on server start
-    hot: true, // Enable hot module replacement
-    historyApiFallback: true, // For single-page applications
+    compress: true,
+    port: 9000,
+    open: true,
+    hot: true,
+    historyApiFallback: true,
   },
 
-  // Source maps for easier debugging
   devtool: 'source-map',
 
-  // Optimization settings
   optimization: {
     splitChunks: {
-      chunks: 'all', // Split vendor and commons
+      chunks: 'all',
     },
   },
 };

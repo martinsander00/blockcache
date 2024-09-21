@@ -1,28 +1,102 @@
 body {
   font-family: Arial, sans-serif;
-  text-align: center;
-  margin-top: 50px;
+  margin: 0;
+  padding: 0;
 }
 
-.input-section {
-  margin: 20px 0;
+/* Header Styles */
+.header {
+  background-color: #fff;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #eaeaea;
 }
 
-input {
-  padding: 10px;
-  width: 300px;
-  font-size: 16px;
+.navbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-button {
-  padding: 10px 20px;
-  font-size: 16px;
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #6a0dad; /* Purple color for the logo */
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  margin-left: auto; /* Moves the nav-links to the right */
+}
+
+.nav-links li a {
+  text-decoration: none;
+  color: #000;
+  font-weight: 500;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+/* Divider Line */
+.divider {
+  border: none;
+  border-top: 1px solid #eaeaea;
+  margin: 0;
+}
+
+/* Pools Container */
+.pools-container {
+  padding: 20px;
+}
+
+/* Pool Row Styles */
+.pool-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f8f8f8;
+  margin: 10px 0;
+  padding: 15px 20px;
+  border-radius: 5px;
   cursor: pointer;
-  margin-left: 10px;
+  transition: background-color 0.3s ease;
 }
 
-#responseSection {
-  margin-top: 30px;
-  font-size: 18px;
+.pool-row:hover {
+  background-color: #eaeaea;
+}
+
+.pool-row img {
+  height: 30px;
+  margin-right: 15px;
+}
+
+.pool-row span {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Graph Styles */
+.graph-space {
+  padding: 10px;
+  margin: 0 auto;
+  width: 33%; /* Makes the graph smaller */
+}
+
+.graph-container canvas {
+  width: 100% !important; /* Ensures canvas resizes to container */
+  height: auto;
 }
 
