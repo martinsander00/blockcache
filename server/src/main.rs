@@ -4,6 +4,8 @@ use axum::{
     routing::post,
     Json, Router,
 };
+use tokio::task::JoinHandle;
+use tokio::time::interval;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tokio_postgres::{NoTls, Client};
@@ -125,56 +127,91 @@ async fn generate_transactions(
     db_client: Arc<Client>,
     shutdown_token: CancellationToken,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let mut rng = StdRng::from_entropy(); // Use a `Send` RNG
+    // Define the list of addresses
+    let addresses = vec![
+        "6d4UYGAEs4Akq6py8Vb3Qv5PvMkecPLS1Z9bBCcip2R7",
+        "7xuPLn8Bun4ZGHeD95xYLnPKReKtSe7zfVRzRJWJZVZW",
+        "CWjGo5jkduSW5LN5rxgiQ18vGnJJEKWPCXkpJGxKSQTH",
+    ];
 
-    // Use an interval to schedule transactions every 20 milliseconds
-    let mut interval = tokio::time::interval(Duration::from_millis(20));
+    // Vector to hold all spawned task handles
+    let mut handles: Vec<JoinHandle<()>> = Vec::new();
 
-    let mut count = 0;
-    let mut last_report = Instant::now();
+    for address in addresses {
+        // Clone necessary variables for each task
+        let db_client = Arc::clone(&db_client);
+        let shutdown_token = shutdown_token.clone();
+        let address = address.to_string();
 
-    loop {
-        tokio::select! {
-            _ = interval.tick() => {
-                // Check if shutdown is requested
-                if shutdown_token.is_cancelled() {
-                    info!("Transaction generator is shutting down...");
-                    break;
-                }
+        // Spawn a separate task for each address
+        let handle = tokio::spawn(async move {
+            let mut rng = StdRng::from_entropy(); // Use a `Send` RNG
 
-                // Generate a random transaction signature
-                let signature = format!("tx_{}", rng.gen::<u64>());
+            // Interval for generating 50 transactions per second (every 20ms)
+            let mut interval = interval(Duration::from_millis(20));
 
-                // Generate a random amount between 0.1 and 10.0
-                let amount: f64 = rng.gen_range(0.1..10.0);
+            let mut count = 0;
+            let mut last_report = Instant::now();
 
-                // Insert the transaction into the database
-                insert_transaction(&db_client, &signature, "6d4UYGAEs4Akq6py8Vb3Qv5PvMkecPLS1Z9bBCcip2R7", amount).await?;
+            loop {
+                tokio::select! {
+                    _ = interval.tick() => {
+                        // Check if shutdown is requested
+                        if shutdown_token.is_cancelled() {
+                            info!("Transaction generator for {} is shutting down...", address);
+                            break;
+                        }
 
-                count += 1;
+                        // Generate a random transaction signature
+                        let signature = format!("tx_{}", rng.gen::<u64>());
 
-                // Log the transaction
-                debug!(
-                    "Inserted simulated transaction: signature={}, amount={:.2}",
-                    signature, amount
-                );
+                        // Generate a random amount between 0.1 and 10.0
+                        let amount: f64 = rng.gen_range(0.1..10.0);
 
-                // Every second, report the number of transactions inserted
-                if last_report.elapsed() >= Duration::from_secs(1) {
-                    info!(
-                        "Inserted {} transactions in the last {:.2} seconds",
-                        count,
-                        last_report.elapsed().as_secs_f64()
-                    );
-                    count = 0;
-                    last_report = Instant::now();
+                        // Insert the transaction into the database
+                        if let Err(e) = insert_transaction(&db_client, &signature, &address, amount).await {
+                            error!("Failed to insert transaction for {}: {}", address, e);
+                            // Optionally handle the error (e.g., retry, skip, etc.)
+                            continue;
+                        }
+
+                        count += 1;
+
+                        // Log the transaction
+                        debug!(
+                            "Inserted simulated transaction: signature={}, amount={:.2}, address={}",
+                            signature, amount, address
+                        );
+
+                        // Every second, report the number of transactions inserted
+                        if last_report.elapsed() >= Duration::from_secs(1) {
+                            info!(
+                                "Inserted {} transactions for address {} in the last {:.2} seconds",
+                                count,
+                                address,
+                                last_report.elapsed().as_secs_f64()
+                            );
+                            count = 0;
+                            last_report = Instant::now();
+                        }
+                    }
+                    _ = shutdown_token.cancelled() => {
+                        info!("Transaction generator for {} received shutdown signal.", address);
+                        break;
+                    }
                 }
             }
-            _ = shutdown_token.cancelled() => {
-                info!("Transaction generator received shutdown signal.");
-                break;
-            }
-        }
+
+            info!("Transaction generator for {} has stopped.", address);
+        });
+
+        handles.push(handle);
+    }
+
+    // Wait for all tasks to complete
+    for handle in handles {
+        // If a task panics, propagate the error
+        handle.await?;
     }
 
     Ok(())
