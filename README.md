@@ -144,12 +144,12 @@ cargo build
 
 ## Ready
 
-Now you are ready to start running the <get vol> command in the client. Notice that if you are using the cache the value of the same address doesn't change, this is because the cache get's updated every 30 seconds or so for each pool address. If you shut down the cache, the value will always change.
+Now you are ready to start running the <get vol> command in the client. Notice that if you are using the cache the value of the same address doesn't change, this is because the cache gets updated every 30 seconds or so for each pool address. If you shut down the cache, the value will always change.
 
 ## Website
 
 In this website there are just two rows that are "working". The rest are dummy rows.
 
-The price value in the rows get's updated every 10 seconds or so and turns green or red depending on the price movement. 
+The price value in the rows gets updated every 10 seconds or so and turns green or red depending on the price movement. 
 
 If you click on a row, you get an ugly looking graph that tracks the price changes of the pool address you selected.
