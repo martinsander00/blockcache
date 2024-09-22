@@ -1,7 +1,7 @@
 import usdcIcon from '../images/usdc.png';
 import solanaIcon from '../images/solana.png';
 import Chart from 'chart.js/auto'; // Import Chart.js
-import 'chartjs-adapter-date-fns'; // Add this import for date handling
+import 'chartjs-adapter-date-fns';
 import './styles.css'; // Import CSS
 
 // Define the VolumeResponse interface
