@@ -7,9 +7,9 @@
 
 ### Website
 
-This website simulates the client user. It is able to see in real time the volume from a certain pool address of the 5 minute window.
+This website simulates the client user. It is able to see in real time the volume from a certain pool address of the last 5 minute window.
 
-When the user clicks on a specific pool a graph of the latest volume gets displayed.
+When the user clicks on a specific pool, a graph of the latest volume gets displayed.
 
 ### Server
 
