@@ -5,6 +5,10 @@
 
 ## Architecture
 
+### Database
+
+This PostgreSQL database revolves around a transactions table, which stores transaction data with columns for unique signatures, pool addresses, amounts, and timestamps. To optimize query performance, especially when filtering by pool_address and sorting by timestamp, a composite index has been added on these two columns. This index structure is designed to enhance the efficiency of high-traffic queries, making the database well-suited for time-sensitive operations where querying transaction history is common.
+
 ### Website
 
 This website simulates the client user. It is able to see in real time the volume from a certain pool address of the last 5 minute window.
@@ -20,7 +24,6 @@ If the client doesn't perform a query in 30 seconds, the server will query the d
 ### Cache
 
 Every 30 seconds the cache get's updated by the server. The server checks the cache if it's running and has the latest volume available.
-
 
 ## Set up
 
