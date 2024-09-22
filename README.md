@@ -84,10 +84,19 @@ CREATE TABLE transactions (
   id SERIAL PRIMARY KEY,
   signature TEXT UNIQUE NOT NULL,
   pool_address TEXT NOT NULL,
-  amount NUMERIC NOT NULL,
+  amount DOUBLE PRECISION NOT NULL,
   timestamp TIMESTAMP NOT NULL DEFAULT NOW()
 );
 ```
+
+Add an index on:
+
+```bash
+CREATE INDEX idx_transactions_pool_timestamp
+ON transactions (pool_address, timestamp DESC);
+```
+
+Adding this index benefits queries that filter by pool_address and order by timestamp DESC, reducing the need for full table scans and sorting operations.
 
 6. Run PostgreSQL in the Background:
 Make sure PostgreSQL is running in the background. You can manage the service using the following command (if you used Homebrew):
