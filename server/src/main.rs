@@ -171,7 +171,7 @@ async fn generate_transactions(
                         // Insert the transaction into the database
                         if let Err(e) = insert_transaction(&db_client, &signature, &address, amount).await {
                             error!("Failed to insert transaction for {}: {}", address, e);
-                            // Optionally handle the error (e.g., retry, skip, etc.)
+                            // Add error handling in the future (e.g., retry, skip, etc.)
                             continue;
                         }
 
