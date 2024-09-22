@@ -1,7 +1,7 @@
 
 # Blockcache
 
-5-minute volume tracker simulation with backend server, cache and PostreSQL DB.
+5-minute volume tracker simulation with backend server, cache and PostgreSQL DB.
 
 ## Architecture
 
