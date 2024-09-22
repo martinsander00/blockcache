@@ -149,6 +149,7 @@ This part is not required for the application to run, however it is the "cool" p
 
 ```bash
 cargo build
+cargo run
 ```
 
 ## Ready
